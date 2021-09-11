@@ -1,0 +1,17 @@
+{
+  "magic_mirror": {
+    "category": "player",
+    "sounds": [
+      {
+        "name": "locallooks:magic_mirror_0"
+      },
+      {
+        "name": "locallooks:magic_mirror_1"
+      },
+      {
+        "name": "locallooks:magic_mirror_2"
+      }
+    ],
+    "subtitle": "sound.locallooks.subtitle.magic_mirror"
+  }
+}

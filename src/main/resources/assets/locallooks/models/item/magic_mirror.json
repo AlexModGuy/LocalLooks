@@ -1,0 +1,13 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "locallooks:item/magic_mirror"
+  },
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [ 0, -30, 0 ],
+      "translation": [ 0, 4, 1 ],
+      "scale": [ 0.55, 0.55, 0.55 ]
+    }
+  }
+}

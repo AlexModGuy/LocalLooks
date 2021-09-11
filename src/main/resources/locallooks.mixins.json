@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "com.github.alexthe666.locallooks.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "locallooks.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "client.AbstractClientPlayerEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}
