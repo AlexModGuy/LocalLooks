@@ -1,7 +1,7 @@
 package com.github.alexthe666.locallooks.client.screen;
 
 import com.github.alexthe666.locallooks.skin.SkinType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class SkinData {
     private boolean vanilla;

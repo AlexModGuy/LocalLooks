@@ -2,11 +2,11 @@ package com.github.alexthe666.locallooks.message;
 
 import com.github.alexthe666.locallooks.LocalLooks;
 import com.github.alexthe666.locallooks.config.ConfigHolder;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent;
 
 import java.util.function.Supplier;
 
@@ -23,12 +23,12 @@ public class CloseMirrorMessage  {
         this.offhand = offhand;
     }
 
-    public static void write(CloseMirrorMessage message, PacketBuffer packetBuffer) {
+    public static void write(CloseMirrorMessage message, FriendlyByteBuf packetBuffer) {
         packetBuffer.writeInt(message.entityID);
         packetBuffer.writeBoolean(message.offhand);
     }
 
-    public static CloseMirrorMessage read(PacketBuffer packetBuffer) {
+    public static CloseMirrorMessage read(FriendlyByteBuf packetBuffer) {
         return new CloseMirrorMessage(packetBuffer.readInt(), packetBuffer.readBoolean());
     }
 
@@ -39,12 +39,12 @@ public class CloseMirrorMessage  {
         public static void handle(CloseMirrorMessage message, Supplier<NetworkEvent.Context> context) {
             ((NetworkEvent.Context)context.get()).setPacketHandled(true);
             ((NetworkEvent.Context)context.get()).enqueueWork(() -> {
-                Entity e = ((NetworkEvent.Context)context.get()).getSender().world.getEntityByID(message.entityID);
-                if(e instanceof PlayerEntity){
-                    ItemStack stack = message.offhand ? ((PlayerEntity) e).getHeldItemOffhand() : ((PlayerEntity) e).getHeldItemMainhand();
-                    if(stack.getItem() == LocalLooks.MAGIC_MIRROR){
-                        LocalLooks.PROXY.displayItemInteractionForPlayer((PlayerEntity) e, stack.copy());
-                        if(!((PlayerEntity) e).isCreative() && ConfigHolder.SERVER.singleUseMirror.get()){
+                Entity e = ((NetworkEvent.Context)context.get()).getSender().level.getEntity(message.entityID);
+                if(e instanceof Player){
+                    ItemStack stack = message.offhand ? ((Player) e).getOffhandItem() : ((Player) e).getMainHandItem();
+                    if(stack.getItem() == LocalLooks.MAGIC_MIRROR.get()){
+                        LocalLooks.PROXY.displayItemInteractionForPlayer((Player) e, stack.copy());
+                        if(!((Player) e).isCreative() && ConfigHolder.SERVER.singleUseMirror.get()){
                             stack.shrink(1);
                         }
                     }

@@ -5,11 +5,11 @@ import com.github.alexthe666.locallooks.LocalLooks;
 import com.github.alexthe666.locallooks.skin.texture.MirrorDownloadingTexture;
 import com.google.common.hash.Hashing;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.Texture;
+import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import javax.imageio.ImageIO;
@@ -51,7 +51,7 @@ public class SkinLoader {
 
 
         ResourceLocation resourcelocation = new ResourceLocation("locallooks:skins/" + s + ".png");
-        Texture texture = Minecraft.getInstance().textureManager.getTexture(resourcelocation);
+        AbstractTexture texture = Minecraft.getInstance().textureManager.getTexture(resourcelocation, null);
         if (texture == null) {
             File file1 = new File(getSkinCacheFolder(), s.length() > 2 ? s.substring(0, 2) : "xx");
             File file2 = new File(file1, s);
@@ -64,18 +64,18 @@ public class SkinLoader {
             } catch (Exception e) {
 
             }
-            MirrorDownloadingTexture downloadingtexture = new MirrorDownloadingTexture(file2, urlStr, DefaultPlayerSkin.getDefaultSkinLegacy(), !thinArms, () -> {
+            MirrorDownloadingTexture downloadingtexture = new MirrorDownloadingTexture(file2, urlStr, DefaultPlayerSkin.getDefaultSkin(), !thinArms, () -> {
             });
-            Minecraft.getInstance().textureManager.loadTexture(resourcelocation, downloadingtexture);
+            Minecraft.getInstance().textureManager.register(resourcelocation, downloadingtexture);
         }
 
         return resourcelocation;
     }
 
-    public static ResourceLocation getSkinForPlayer(PlayerEntity player) {
+    public static ResourceLocation getSkinForPlayer(Player player) {
         String url = BACKUP_URL;
         boolean arms = false;
-        CompoundNBT tag = CitadelEntityData.getOrCreateCitadelTag(player);
+        CompoundTag tag = CitadelEntityData.getOrCreateCitadelTag(player);
         if (tag.contains("LocalLooksURL")) {
             url = tag.getString("LocalLooksURL");
         }

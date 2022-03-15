@@ -4,42 +4,41 @@ import com.github.alexthe666.citadel.server.entity.CitadelEntityData;
 import com.github.alexthe666.locallooks.skin.SkinLoader;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AbstractClientPlayerEntity.class)
-public abstract class AbstractClientPlayerEntityMixin extends PlayerEntity {
+@Mixin(AbstractClientPlayer.class)
+public abstract class AbstractClientPlayerEntityMixin extends Player {
 
-    public AbstractClientPlayerEntityMixin(World world, BlockPos pos, float f, GameProfile profile) {
+    public AbstractClientPlayerEntityMixin(Level world, BlockPos pos, float f, GameProfile profile) {
         super(world, pos, f, profile);
     }
 
     @Inject(at = @At("HEAD"),
-            method = "Lnet/minecraft/client/entity/player/AbstractClientPlayerEntity;getLocationSkin()Lnet/minecraft/util/ResourceLocation;",
+            method = "Lnet/minecraft/client/player/AbstractClientPlayer;getSkinTextureLocation()Lnet/minecraft/resources/ResourceLocation;",
             cancellable = true)
     private void locallooks_getLocationSkin(CallbackInfoReturnable<ResourceLocation> cir) {
-        CompoundNBT tag = CitadelEntityData.getOrCreateCitadelTag(Minecraft.getInstance().player);
+        CompoundTag tag = CitadelEntityData.getOrCreateCitadelTag(Minecraft.getInstance().player);
         if(tag.contains("LocalLooksSkin") && tag.getBoolean("LocalLooksSkin")){
             cir.setReturnValue(SkinLoader.getSkinForPlayer(this));
         }
     }
 
     @Inject(at = @At("HEAD"),
-            method = "Lnet/minecraft/client/entity/player/AbstractClientPlayerEntity;getSkinType()Ljava/lang/String;",
+            method = "Lnet/minecraft/client/player/AbstractClientPlayer;getModelName()Ljava/lang/String;",
             cancellable = true)
     private void locallooks_getSkinType(CallbackInfoReturnable<String> cir) {
-        CompoundNBT tag = CitadelEntityData.getOrCreateCitadelTag(Minecraft.getInstance().player);
-        if(tag.contains("LocalLooksArms") && tag.contains("LocalLooksArms")) {
+        CompoundTag tag = CitadelEntityData.getOrCreateCitadelTag(Minecraft.getInstance().player);
+        if (tag.contains("LocalLooksArms") && tag.contains("LocalLooksArms")) {
             cir.setReturnValue(tag.getBoolean("LocalLooksArms") ? "slim" : "default");
         }
     }
-
 }

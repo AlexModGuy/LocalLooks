@@ -3,12 +3,12 @@ package com.github.alexthe666.locallooks.skin.texture;
 import com.github.alexthe666.locallooks.config.ConfigHolder;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.NativeImage;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.SimpleTexture;
-import net.minecraft.client.renderer.texture.TextureUtil;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Util;
+import com.mojang.blaze3d.platform.TextureUtil;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.Util;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.io.FileUtils;
@@ -68,17 +68,17 @@ public class MirrorDownloadingTexture extends SimpleTexture {
     }
 
     private void upload(NativeImage imageIn) {
-        TextureUtil.prepareImage(this.getGlTextureId(), imageIn.getWidth(), imageIn.getHeight());
-        imageIn.uploadTextureSub(0, 0, 0, true);
+        TextureUtil.prepareImage(this.getId(), imageIn.getWidth(), imageIn.getHeight());
+        imageIn.upload(0, 0, 0, true);
     }
 
-    public void loadTexture(IResourceManager manager) throws IOException {
+    public void load(ResourceManager manager) throws IOException {
         Minecraft.getInstance().execute(() -> {
             if (!this.textureUploaded) {
                 try {
-                    super.loadTexture(manager);
+                    super.load(manager);
                 } catch (IOException ioexception) {
-                    LOGGER.warn("Failed to load texture: {}", this.textureLocation, ioexception);
+                    LOGGER.warn("Failed to load texture: {}", this.location, ioexception);
                 }
 
                 this.textureUploaded = true;
@@ -139,7 +139,7 @@ public class MirrorDownloadingTexture extends SimpleTexture {
 
                     }
 
-                }, Util.getServerExecutor());
+                }, Util.backgroundExecutor());
             }
         }
     }
@@ -164,22 +164,22 @@ public class MirrorDownloadingTexture extends SimpleTexture {
         boolean flag = nativeImageIn.getHeight() == 32;
         if (flag) {
             NativeImage nativeimage = new NativeImage(64, 64, true);
-            nativeimage.copyImageData(nativeImageIn);
+            nativeimage.copyFrom(nativeImageIn);
             nativeImageIn.close();
             nativeImageIn = nativeimage;
-            nativeimage.fillAreaRGBA(0, 32, 64, 32, 0);
-            nativeimage.copyAreaRGBA(4, 16, 16, 32, 4, 4, true, false);
-            nativeimage.copyAreaRGBA(8, 16, 16, 32, 4, 4, true, false);
-            nativeimage.copyAreaRGBA(0, 20, 24, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(4, 20, 16, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(8, 20, 8, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(12, 20, 16, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(44, 16, -8, 32, 4, 4, true, false);
-            nativeimage.copyAreaRGBA(48, 16, -8, 32, 4, 4, true, false);
-            nativeimage.copyAreaRGBA(40, 20, 0, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(44, 20, -8, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(48, 20, -16, 32, 4, 12, true, false);
-            nativeimage.copyAreaRGBA(52, 20, -8, 32, 4, 12, true, false);
+            nativeimage.fillRect(0, 32, 64, 32, 0);
+            nativeimage.copyRect(4, 16, 16, 32, 4, 4, true, false);
+            nativeimage.copyRect(8, 16, 16, 32, 4, 4, true, false);
+            nativeimage.copyRect(0, 20, 24, 32, 4, 12, true, false);
+            nativeimage.copyRect(4, 20, 16, 32, 4, 12, true, false);
+            nativeimage.copyRect(8, 20, 8, 32, 4, 12, true, false);
+            nativeimage.copyRect(12, 20, 16, 32, 4, 12, true, false);
+            nativeimage.copyRect(44, 16, -8, 32, 4, 4, true, false);
+            nativeimage.copyRect(48, 16, -8, 32, 4, 4, true, false);
+            nativeimage.copyRect(40, 20, 0, 32, 4, 12, true, false);
+            nativeimage.copyRect(44, 20, -8, 32, 4, 12, true, false);
+            nativeimage.copyRect(48, 20, -16, 32, 4, 12, true, false);
+            nativeimage.copyRect(52, 20, -8, 32, 4, 12, true, false);
         }
         boolean transparency = ConfigHolder.CLIENT.transparentSkins.get();
         if(transparency){
