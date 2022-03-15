@@ -4,7 +4,7 @@ issueTrackerURL="https://github.com/Alex-the-666/local-looks/issues" #optional
 license="GNU LESSER GENERAL PUBLIC LICENSE"
 [[mods]] #mandatory
 modId="locallooks" #mandatory
-version="1.0.0" #mandatory
+version="1.1.0" #mandatory
 displayName="Local Looks" #mandatory
 displayURL="https://www.curseforge.com/minecraft/mc-mods/local-looks" #optional
 authors="Alexthe666" #optional

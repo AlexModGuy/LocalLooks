@@ -1,13 +1,17 @@
 {
   "item.locallooks.magic_mirror": "Magic Mirror",
   "gui.locallooks.mirror_title": "Magic Mirror",
-  "gui.locallooks.enter_url": "Enter Skin URL:",
+  "gui.locallooks.enter_url": "Enter Skin URL or File Path:",
   "gui.locallooks.refresh": "Change Skin",
   "gui.locallooks.toggle_arms": "Toggle Arms",
   "gui.locallooks.reset": "Reset Skin",
-  "gui.locallooks.select_file": "Select from File...",
+  "gui.locallooks.select_file": "Select from File",
+  "gui.locallooks.local_skin_selection": "Choose Local Skin",
+  "gui.locallooks.select": "Select Skin",
+  "gui.locallooks.open_folder": "Open Skin Folder...",
   "gui.locallooks.url_warning_1": "Invalid URL! (No image found)",
   "gui.locallooks.url_warning_2": "No URL!",
   "gui.locallooks.url_warning_3": "Invalid URL! (IO Exception)",
+  "gui.locallooks.url_warning_4": "Invalid image, not a square",
   "sound.locallooks.subtitle.magic_mirror": "Magic Mirror sheens"
 }

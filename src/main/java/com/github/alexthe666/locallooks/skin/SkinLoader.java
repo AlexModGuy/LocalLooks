@@ -1,6 +1,7 @@
 package com.github.alexthe666.locallooks.skin;
 
 import com.github.alexthe666.citadel.server.entity.CitadelEntityData;
+import com.github.alexthe666.locallooks.LocalLooks;
 import com.github.alexthe666.locallooks.skin.texture.MirrorDownloadingTexture;
 import com.google.common.hash.Hashing;
 import net.minecraft.client.Minecraft;
@@ -18,15 +19,30 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class SkinLoader {
     private static final String BACKUP_URL = "https://i.imgur.com/38cvzEc.png";
 
-    private static File getSkinFolder() {
+    private static File getSkinCacheFolder() {
         Path configPath = FMLPaths.GAMEDIR.get();
         Path jsonPath = Paths.get(configPath.toAbsolutePath().toString(), "locallooks/cache");
+        return jsonPath.toFile();
+    }
+
+    public static File getSkinFolder() {
+        Path configPath = FMLPaths.GAMEDIR.get();
+        Path jsonPath = Paths.get(configPath.toAbsolutePath().toString(), "locallooks/skins");
+        if (!Files.exists(jsonPath)) {
+            try {
+                Files.createDirectory(jsonPath);
+                LocalLooks.LOGGER.info("Created skin folder for locallooks");
+            }catch (Exception e){
+                return null;
+            }
+        }
         return jsonPath.toFile();
     }
 
@@ -37,7 +53,7 @@ public class SkinLoader {
         ResourceLocation resourcelocation = new ResourceLocation("locallooks:skins/" + s + ".png");
         Texture texture = Minecraft.getInstance().textureManager.getTexture(resourcelocation);
         if (texture == null) {
-            File file1 = new File(getSkinFolder(), s.length() > 2 ? s.substring(0, 2) : "xx");
+            File file1 = new File(getSkinCacheFolder(), s.length() > 2 ? s.substring(0, 2) : "xx");
             File file2 = new File(file1, s);
             URL url = null;
             try {

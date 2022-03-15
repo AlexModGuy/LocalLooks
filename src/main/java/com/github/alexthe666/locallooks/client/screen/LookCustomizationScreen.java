@@ -30,6 +30,8 @@ import net.minecraft.util.text.TranslationTextComponent;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import java.net.MalformedURLException;
 
 public class LookCustomizationScreen extends Screen {
     private static final ResourceLocation TEXTURE = new ResourceLocation("locallooks:textures/gui/mirror.png");
@@ -58,6 +60,21 @@ public class LookCustomizationScreen extends Screen {
         this.offhand = offhand;
     }
 
+
+    public LookCustomizationScreen(boolean offhand, File fileIn) {
+        super(TITLE_TEXT);
+        this.loadingWarning = 0;
+        transProgress = 0.0F;
+        this.offhand = offhand;
+        try {
+            this.enteredURL = fileIn.toURL().toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        this.changePlayerTexture(false, false, false, true);
+    }
+
+
     private boolean isCreative() {
         return Minecraft.getInstance().player.isCreative() || Minecraft.getInstance().player.isSpectator();
     }
@@ -82,10 +99,10 @@ public class LookCustomizationScreen extends Screen {
         super.init();
         int i = (this.width - this.sizePx) / 2;
         int j = (this.height - this.sizePx) / 2;
-        this.addButton(refreshURLBtn = new Button(i + 128, j + 75, 80, 20, new TranslationTextComponent("gui.locallooks.refresh"), (p_214132_1_) -> {
+        this.addButton(refreshURLBtn = new Button(i + 128, j + 75, 100, 20, new TranslationTextComponent("gui.locallooks.refresh"), (p_214132_1_) -> {
             this.enteredURL = this.skinURLField.getText();
             loadingWarning = SkinLoader.testURL(enteredURL);
-            this.changePlayerTexture(false, true, false);
+            this.changePlayerTexture(false, true, false,  false);
         }));
         refreshURLBtn.active = false;
         this.skinURLField = new TextFieldWidget(this.font, i + 130, j + 50, 180, 20, new TranslationTextComponent("selectWorld.enterName")) {
@@ -102,17 +119,17 @@ public class LookCustomizationScreen extends Screen {
         this.children.add(this.skinURLField);
         this.addButton(new Button(i + 150, j + 160, 140, 20, new TranslationTextComponent("gui.locallooks.toggle_arms"), (p_214132_1_) -> {
             smallArms = !smallArms;
-            this.changePlayerTexture(false, false, true);
+            this.changePlayerTexture(false, false, true, false);
         }));
         this.addButton(new Button(i + 150, j + 190, 140, 20, new TranslationTextComponent("gui.locallooks.reset"), (p_214132_1_) -> {
-            this.changePlayerTexture(true, true, false);
+            this.changePlayerTexture(true, true, false,  false);
         }));
         this.addButton(new Button(i + 150, j + 220, 140, 20, new TranslationTextComponent("gui.done"), (p_214132_1_) -> {
+            closeScreen();
             Minecraft.getInstance().displayGuiScreen(null);
         }));
-        this.addButton(selectFileBtn = new Button(i + 128, j + 100, 80, 20, new TranslationTextComponent("gui.locallooks.select_file"), (p_214132_1_) -> {
-
-            // this.changePlayerTexture(false, true, false);
+        this.addButton(selectFileBtn = new Button(i + 128, j + 100, 100, 20, new TranslationTextComponent("gui.locallooks.select_file"), (p_214132_1_) -> {
+            Minecraft.getInstance().displayGuiScreen(new LocalSkinSelectionScreen(offhand));
         }));
     }
 
@@ -122,7 +139,7 @@ public class LookCustomizationScreen extends Screen {
         this.skinURLField.setText(s);
     }
 
-    private void changePlayerTexture(boolean reset, boolean close, boolean armsOnly) {
+    private void changePlayerTexture(boolean reset, boolean close, boolean armsOnly, boolean localFile) {
         CompoundNBT tag = CitadelEntityData.getOrCreateCitadelTag(Minecraft.getInstance().player);
         boolean prevArms = false;
         String prevURL = "";
@@ -149,6 +166,9 @@ public class LookCustomizationScreen extends Screen {
             tag.putBoolean("LocalLooksArms", smallArms);
             tag.putString("LocalLooksURL", enteredURL);
         }
+        if(localFile){
+            tag.putBoolean("LocalLooksIsLocalSkin", localFile);
+        }
         if (smallArms != prevArms || !enteredURL.equals(prevURL) || prevNonVanillaSkin == vanillaSkin) {
             consumeMirror = true;
         }
@@ -159,8 +179,8 @@ public class LookCustomizationScreen extends Screen {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
+    public void closeScreen() {
+        super.closeScreen();
         if (consumeMirror) {
             PlayerEntity player = Minecraft.getInstance().player;
             ItemStack stack = offhand ? player.getHeldItemOffhand() : player.getHeldItemMainhand();
@@ -215,5 +235,7 @@ public class LookCustomizationScreen extends Screen {
         WorldVertexBufferUploader.draw(bufferbuilder);
         RenderSystem.disableBlend();
     }
+
+
 
 }
