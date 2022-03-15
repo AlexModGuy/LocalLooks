@@ -1,0 +1,12 @@
+{
+  "item.locallooks.magic_mirror": "Miroir Magique",
+  "gui.locallooks.mirror_title": "Miroir Magique",
+  "gui.locallooks.enter_url": "Entrez une URL d'un skin :",
+  "gui.locallooks.refresh": "Changer de skin",
+  "gui.locallooks.toggle_arms": "Bras articulés",
+  "gui.locallooks.reset": "Réintialiser le skin",
+  "gui.locallooks.url_warning_1": "URL Invalide ! (L'image n'a pas été trouvé)",
+  "gui.locallooks.url_warning_2": "Pas d'URL !",
+  "gui.locallooks.url_warning_3": "URL Invalide ! (IO Exception)",
+  "sound.locallooks.subtitle.magic_mirror": "Miroirs magiques"
+}
