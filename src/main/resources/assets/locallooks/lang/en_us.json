@@ -5,6 +5,7 @@
   "gui.locallooks.refresh": "Change Skin",
   "gui.locallooks.toggle_arms": "Toggle Arms",
   "gui.locallooks.reset": "Reset Skin",
+  "gui.locallooks.select_file": "Select from File...",
   "gui.locallooks.url_warning_1": "Invalid URL! (No image found)",
   "gui.locallooks.url_warning_2": "No URL!",
   "gui.locallooks.url_warning_3": "Invalid URL! (IO Exception)",

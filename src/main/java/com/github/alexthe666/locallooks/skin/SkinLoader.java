@@ -59,7 +59,7 @@ public class SkinLoader {
     public static ResourceLocation getSkinForPlayer(PlayerEntity player) {
         String url = BACKUP_URL;
         boolean arms = false;
-        CompoundNBT tag = CitadelEntityData.getOrCreateCitadelTag(Minecraft.getInstance().player);
+        CompoundNBT tag = CitadelEntityData.getOrCreateCitadelTag(player);
         if (tag.contains("LocalLooksURL")) {
             url = tag.getString("LocalLooksURL");
         }

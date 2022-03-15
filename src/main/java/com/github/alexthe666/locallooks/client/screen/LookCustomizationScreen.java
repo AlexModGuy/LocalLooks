@@ -28,6 +28,9 @@ import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 public class LookCustomizationScreen extends Screen {
     private static final ResourceLocation TEXTURE = new ResourceLocation("locallooks:textures/gui/mirror.png");
     private static final ResourceLocation TEXTURE_SHEEN = new ResourceLocation("locallooks:textures/gui/mirror_sheen.png");
@@ -40,6 +43,7 @@ public class LookCustomizationScreen extends Screen {
     private float mousePosY;
     private int loadingWarning;
     private Button refreshURLBtn;
+    private Button selectFileBtn;
     private boolean smallArms = false;
     private float transProgress = 0;
     private float prevTransProgress = 0;
@@ -105,6 +109,10 @@ public class LookCustomizationScreen extends Screen {
         }));
         this.addButton(new Button(i + 150, j + 220, 140, 20, new TranslationTextComponent("gui.done"), (p_214132_1_) -> {
             Minecraft.getInstance().displayGuiScreen(null);
+        }));
+        this.addButton(selectFileBtn = new Button(i + 128, j + 100, 80, 20, new TranslationTextComponent("gui.locallooks.select_file"), (p_214132_1_) -> {
+
+            // this.changePlayerTexture(false, true, false);
         }));
     }
 
