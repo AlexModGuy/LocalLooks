@@ -168,5 +168,4 @@ publishing {
 
 mixin {
     add sourceSets.main, "${modid}.refmap.json"
-    add sourceSets.main, "citadel.refmap.json"
 }
