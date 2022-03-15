@@ -1,0 +1,12 @@
+{
+  "item.locallooks.magic_mirror": "Specchio magico",
+  "gui.locallooks.mirror_title": "Specchio magico",
+  "gui.locallooks.enter_url": "Inserisci l'URL della pelle:",
+  "gui.locallooks.refresh": "Cambia pelle",
+  "gui.locallooks.toggle_arms": "Cambia braccia",
+  "gui.locallooks.reset": "Ripristina pelle",
+  "gui.locallooks.url_warning_1": "URL non valido! (Nessuna immagine trovata)",
+  "gui.locallooks.url_warning_2": "Nessun URL!",
+  "gui.locallooks.url_warning_3": "URL non valido! (IO Exception)",
+  "sound.locallooks.subtitle.magic_mirror": "Specchio magico splende"
+}
