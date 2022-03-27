@@ -44,10 +44,17 @@ public class SkinListWidget extends ExtendedList<SkinListWidget.Entry> {
     public void repopulate() {
         this.clearEntries();
         File parent = SkinLoader.getSkinFolder();
+        if(parent != null && !parent.exists()){
+            parent.mkdir();
+        }
         String[] extensions = new String[] { "png", "jpg" };
-        List<File> files = (List<File>) FileUtils.listFiles(parent, extensions, true);
-        for (File file : files) {
-            this.addEntry(new Entry(file));
+        try{
+            List<File> files = (List<File>) FileUtils.listFiles(parent, extensions, true);
+            for (File file : files) {
+                this.addEntry(new Entry(file));
+            }
+        }catch (Exception e){
+            LocalLooks.LOGGER.warn("could not open skin folder");
         }
     }
 
