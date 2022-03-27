@@ -13,7 +13,6 @@ apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
-apply plugin: 'org.spongepowered.mixin'
 
 version = "${mod_version}-${mc_version}"
 group = "com.tfar.${modid}" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -141,6 +140,15 @@ jar {
                 "MixinConfigs"            : "${modid}.mixins.json"
         ])
     }
+}
+
+apply plugin: 'org.spongepowered.mixin'
+
+mixin {
+    add sourceSets.main, "citadel.refmap.json"
+    add sourceSets.main, "locallooks.refmap.json"
+    config 'citadel.mixins.json'
+    config 'locallooks.mixins.json'
 }
 
 // Example configuration to allow publishing using the maven-publish task
