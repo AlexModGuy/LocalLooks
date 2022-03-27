@@ -130,6 +130,15 @@ sourceSets {
     main.resources.srcDirs += 'src/generated/resources'
 }
 
+apply plugin: 'org.spongepowered.mixin'
+
+mixin {
+    add sourceSets.main, "citadel.refmap.json"
+    add sourceSets.main, "locallooks.refmap.json"
+    config 'citadel.mixins.json'
+    config 'locallooks.mixins.json'
+}
+
 // Example for how to get properties into the manifest for reading by the runtime..
 jar {
     manifest {
@@ -144,6 +153,11 @@ jar {
                 "MixinConfigs"            : "${modid}.mixins.json"
         ])
     }
+}
+
+
+mixin {
+    add sourceSets.main, "locallooks.refmap.json"
 }
 
 // Example configuration to allow publishing using the maven-publish task
@@ -166,11 +180,4 @@ publishing {
             url "file:///${project.projectDir}/mcmodsrepo"
         }
     }
-}
-
-apply plugin: 'org.spongepowered.mixin'
-
-mixin {
-    add sourceSets.main, "${modid}.refmap.json"
-    add sourceSets.main, "citadel.refmap.json"
 }
