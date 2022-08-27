@@ -7,16 +7,16 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.Util;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.client.event.ScreenEvent;
 
 import java.io.File;
 
 public class LocalSkinSelectionScreen extends Screen {
     public static final ResourceLocation BACKGROUND_LOCATION = new ResourceLocation("locallooks:textures/gui/background.png");
-    private static final Component TITLE_TEXT = new TranslatableComponent("gui.locallooks.local_skin_selection");
+    private static final Component TITLE_TEXT = Component.translatable("gui.locallooks.local_skin_selection");
     private final boolean offhand;
     private SkinListWidget list;
     private Button selectSkinBtn;
@@ -30,14 +30,14 @@ public class LocalSkinSelectionScreen extends Screen {
         this.addRenderableWidget(new Button(this.width / 2 - 200, this.height - 48, 120, 20, CommonComponents.GUI_CANCEL, (p_238903_1_) -> {
             this.minecraft.setScreen(new LookCustomizationScreen(offhand));
         }));
-        this.addRenderableWidget(new Button(this.width / 2 - 60, this.height - 48, 120, 20, new TranslatableComponent("gui.locallooks.open_folder"), (p_238896_1_) -> {
+        this.addRenderableWidget(new Button(this.width / 2 - 60, this.height - 48, 120, 20, Component.translatable("gui.locallooks.open_folder"), (p_238896_1_) -> {
             File path = SkinLoader.getSkinFolder();
             if (path != null) {
                 Util.getPlatform().openFile(path);
             }
             this.list.repopulate();
         }));
-        this.addRenderableWidget(selectSkinBtn = new Button(this.width / 2 + 80, this.height - 48, 120, 20, new TranslatableComponent("gui.locallooks.select"), (p_238903_1_) -> {
+        this.addRenderableWidget(selectSkinBtn = new Button(this.width / 2 + 80, this.height - 48, 120, 20, Component.translatable("gui.locallooks.select"), (p_238903_1_) -> {
             this.minecraft.setScreen(new LookCustomizationScreen(offhand, this.list.getSelected().getFile()));
         }));
         this.selectSkinBtn.active = false;
@@ -81,6 +81,6 @@ public class LocalSkinSelectionScreen extends Screen {
         bufferbuilder.vertex((double)this.width, 0.0D, 0.0D).uv((float)this.width / 32.0F, (float)vOffset).color(64, 64, 64, 255).endVertex();
         bufferbuilder.vertex(0.0D, 0.0D, 0.0D).uv(0.0F, (float)vOffset).color(64, 64, 64, 255).endVertex();
         tesselator.end();
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent(this, new PoseStack()));
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new ScreenEvent.BackgroundRendered(this, new PoseStack()));
     }
 }

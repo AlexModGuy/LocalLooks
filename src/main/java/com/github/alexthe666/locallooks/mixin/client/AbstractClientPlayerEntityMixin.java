@@ -9,7 +9,9 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.ProfilePublicKey;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -18,8 +20,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerEntityMixin extends Player {
 
-    public AbstractClientPlayerEntityMixin(Level world, BlockPos pos, float f, GameProfile profile) {
-        super(world, pos, f, profile);
+
+    public AbstractClientPlayerEntityMixin(Level level, BlockPos pos, float f, GameProfile gameProfile, @Nullable ProfilePublicKey key) {
+        super(level, pos, f, gameProfile, key);
     }
 
     @Inject(at = @At("HEAD"),

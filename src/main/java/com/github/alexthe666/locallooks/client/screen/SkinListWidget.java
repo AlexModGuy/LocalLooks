@@ -14,8 +14,6 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import org.apache.commons.io.FileUtils;
 
 import javax.annotation.Nullable;
@@ -26,10 +24,7 @@ import java.util.List;
 import java.util.Locale;
 
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 
-@OnlyIn(Dist.CLIENT)
 public class SkinListWidget extends ObjectSelectionList<SkinListWidget.Entry> {
     private static final ResourceLocation MISSING_TEXTURE = new ResourceLocation("locallooks:textures/gui/missing_skin.png");
     private final Component name;
@@ -86,14 +81,14 @@ public class SkinListWidget extends ObjectSelectionList<SkinListWidget.Entry> {
         private ResourceLocation resourceLocation;
         @Nullable
         private final AbstractTexture texture;
-        private TextComponent fileName;
+        private String fileName;
         private boolean selectable = false;
 
         public Entry(File file) {
             this.file = file;
             this.resourceLocation = new ResourceLocation("locallooks", "localskins/" + file.getName());
             this.texture = getTextureForRender();
-            fileName = new TextComponent(file.getName());
+            fileName = file.getName();
         }
 
         @Override
@@ -110,7 +105,7 @@ public class SkinListWidget extends ObjectSelectionList<SkinListWidget.Entry> {
             matrixStack.pushPose();
             Minecraft.getInstance().font.draw(matrixStack, fileName, (float)(left + 64), (float)(top + 6), selectable ? 16777215 : 0XFF0000);
             if(!selectable){
-                Minecraft.getInstance().font.draw(matrixStack, new TranslatableComponent("gui.locallooks.url_warning_4"), (float)(left + 64), (float)(top + 26), 0XAA0000);
+                Minecraft.getInstance().font.draw(matrixStack, Component.translatable("gui.locallooks.url_warning_4"), (float)(left + 64), (float)(top + 26), 0XAA0000);
             }
             matrixStack.popPose();
         }

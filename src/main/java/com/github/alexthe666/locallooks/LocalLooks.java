@@ -7,7 +7,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -32,12 +31,13 @@ public class LocalLooks {
     public static final String MODID = "locallooks";
     public static final Logger LOGGER = LogManager.getLogger();
     public static final DeferredRegister<Item> ITEM_REGISTRY = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
+    public static final DeferredRegister<SoundEvent> SOUND_REGISTRY = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, MODID);
     public static final RegistryObject<Item> MAGIC_MIRROR = ITEM_REGISTRY.register("magic_mirror", () -> new MagicMirrorItem());
     public static CommonProxy PROXY = DistExecutor.runForDist(() -> ClientProxy::new, () -> CommonProxy::new);
     private static final String PROTOCOL_VERSION = Integer.toString(1);
     private static int packetsRegistered;
     public static final SimpleChannel NETWORK_WRAPPER;
-    public static SoundEvent MIRROR_SOUND = new SoundEvent(new ResourceLocation("locallooks:magic_mirror")).setRegistryName("locallooks:magic_mirror");
+    public static final RegistryObject<SoundEvent> MIRROR_SOUND = SOUND_REGISTRY.register("magic_mirror", () -> new SoundEvent(new ResourceLocation("locallooks:magic_mirror")));
 
     static {
         NetworkRegistry.ChannelBuilder channel = NetworkRegistry.ChannelBuilder.named(new ResourceLocation("locallooks", "main_channel"));
@@ -59,16 +59,12 @@ public class LocalLooks {
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, ConfigHolder.SERVER_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
         ITEM_REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
+        SOUND_REGISTRY.register(FMLJavaModLoadingContext.get().getModEventBus());
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void setupClient(FMLClientSetupEvent event) {
         PROXY.clientInit();
-    }
-
-    @SubscribeEvent
-    public static void registerSound(RegistryEvent.Register<SoundEvent> event) {
-        event.getRegistry().register(MIRROR_SOUND);
     }
 
     public static <MSG> void sendMSGToServer(MSG message) {
@@ -82,9 +78,7 @@ public class LocalLooks {
     }
 
     public static <MSG> void sendNonLocal(MSG msg, ServerPlayer player) {
-        if (player.server.isDedicatedServer() || !player.getName().equals(player.server.getSingleplayerName())) {
-            NETWORK_WRAPPER.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
-        }
+        NETWORK_WRAPPER.sendTo(msg, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
     private void setup(final FMLCommonSetupEvent event) {

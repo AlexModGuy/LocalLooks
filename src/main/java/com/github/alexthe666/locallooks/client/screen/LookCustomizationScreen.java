@@ -23,7 +23,6 @@ import net.minecraft.util.Mth;
 import com.mojang.math.Matrix4f;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -33,8 +32,8 @@ import java.net.MalformedURLException;
 public class LookCustomizationScreen extends Screen {
     private static final ResourceLocation TEXTURE = new ResourceLocation("locallooks:textures/gui/mirror.png");
     private static final ResourceLocation TEXTURE_SHEEN = new ResourceLocation("locallooks:textures/gui/mirror_sheen.png");
-    private static final Component TITLE_TEXT = new TranslatableComponent("gui.locallooks.mirror_title");
-    private static final Component ENTER_URL_TEXT = new TranslatableComponent("gui.locallooks.enter_url");
+    private static final Component TITLE_TEXT = Component.translatable("gui.locallooks.mirror_title");
+    private static final Component ENTER_URL_TEXT = Component.translatable("gui.locallooks.enter_url");
     private int sizePx = 250;
     private EditBox skinURLField;
     private String enteredURL;
@@ -96,13 +95,13 @@ public class LookCustomizationScreen extends Screen {
         super.init();
         int i = (this.width - this.sizePx) / 2;
         int j = (this.height - this.sizePx) / 2;
-        this.addRenderableWidget(refreshURLBtn = new Button(i + 128, j + 75, 100, 20, new TranslatableComponent("gui.locallooks.refresh"), (p_214132_1_) -> {
+        this.addRenderableWidget(refreshURLBtn = new Button(i + 128, j + 75, 100, 20, Component.translatable("gui.locallooks.refresh"), (p_214132_1_) -> {
             this.enteredURL = this.skinURLField.getValue();
             loadingWarning = SkinLoader.testURL(enteredURL);
             this.changePlayerTexture(false, true, false,  false);
         }));
         refreshURLBtn.active = false;
-        this.skinURLField = new EditBox(this.font, i + 130, j + 50, 180, 20, new TranslatableComponent("selectWorld.enterName")) {
+        this.skinURLField = new EditBox(this.font, i + 130, j + 50, 180, 20, Component.translatable("selectWorld.enterName")) {
             protected MutableComponent createNarrationMessage() {
                 return super.createNarrationMessage().append(". ").append(ENTER_URL_TEXT).append(" ").append(LookCustomizationScreen.this.enteredURL);
             }
@@ -114,18 +113,18 @@ public class LookCustomizationScreen extends Screen {
             this.refreshURLBtn.active = !this.skinURLField.getValue().isEmpty();
         });
         this.addRenderableWidget(this.skinURLField);
-        this.addRenderableWidget(new Button(i + 150, j + 160, 140, 20, new TranslatableComponent("gui.locallooks.toggle_arms"), (p_214132_1_) -> {
+        this.addRenderableWidget(new Button(i + 150, j + 160, 140, 20, Component.translatable("gui.locallooks.toggle_arms"), (p_214132_1_) -> {
             smallArms = !smallArms;
             this.changePlayerTexture(false, false, true, false);
         }));
-        this.addRenderableWidget(new Button(i + 150, j + 190, 140, 20, new TranslatableComponent("gui.locallooks.reset"), (p_214132_1_) -> {
+        this.addRenderableWidget(new Button(i + 150, j + 190, 140, 20, Component.translatable("gui.locallooks.reset"), (p_214132_1_) -> {
             this.changePlayerTexture(true, true, false,  false);
         }));
-        this.addRenderableWidget(new Button(i + 150, j + 220, 140, 20, new TranslatableComponent("gui.done"), (p_214132_1_) -> {
+        this.addRenderableWidget(new Button(i + 150, j + 220, 140, 20, Component.translatable("gui.done"), (p_214132_1_) -> {
             onClose();
             Minecraft.getInstance().setScreen(null);
         }));
-        this.addRenderableWidget(selectFileBtn = new Button(i + 128, j + 100, 100, 20, new TranslatableComponent("gui.locallooks.select_file"), (p_214132_1_) -> {
+        this.addRenderableWidget(selectFileBtn = new Button(i + 128, j + 100, 100, 20, Component.translatable("gui.locallooks.select_file"), (p_214132_1_) -> {
             Minecraft.getInstance().setScreen(new LocalSkinSelectionScreen(offhand));
         }));
     }
@@ -187,7 +186,7 @@ public class LookCustomizationScreen extends Screen {
                     stack.shrink(1);
                 }
             }
-            player.playSound(LocalLooks.MIRROR_SOUND, 1.0F, 1.0F);
+            player.playSound(LocalLooks.MIRROR_SOUND.get(), 1.0F, 1.0F);
             LocalLooks.sendMSGToServer(new CloseMirrorMessage(player.getId(), offhand));
         }
     }
@@ -203,7 +202,7 @@ public class LookCustomizationScreen extends Screen {
         drawString(matrixStack, this.font, TITLE_TEXT, k + 95, l + 4, 10526880);
         drawString(matrixStack, this.font, ENTER_URL_TEXT, k + 230, l + 30, 10526880);
         if (loadingWarning > 0) {
-            drawString(matrixStack, this.font, new TranslatableComponent("gui.locallooks.url_warning_" + loadingWarning), k + 320, l + 77, 0XFF0000);
+            drawString(matrixStack, this.font, Component.translatable("gui.locallooks.url_warning_" + loadingWarning), k + 320, l + 77, 0XFF0000);
         }
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -232,8 +231,7 @@ public class LookCustomizationScreen extends Screen {
         bufferbuilder.vertex(matrix, (float) x1 + w, (float) y1, offsetB).color(1, 1, 1, alpha).uv(maxU, minV).endVertex();
         bufferbuilder.vertex(matrix, (float) x1, (float) y1, offsetB).color(1, 1, 1, alpha).uv(minU, minV).endVertex();
         RenderSystem.enableBlend();
-        bufferbuilder.end();
-        BufferUploader.end(bufferbuilder);
+        BufferUploader.drawWithShader(bufferbuilder.end());
         RenderSystem.disableBlend();
     }
 
