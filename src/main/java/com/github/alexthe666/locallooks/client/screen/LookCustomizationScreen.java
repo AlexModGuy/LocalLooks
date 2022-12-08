@@ -20,12 +20,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import com.mojang.math.Matrix4f;
+import org.joml.Matrix4f;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.net.MalformedURLException;
 
@@ -95,11 +93,12 @@ public class LookCustomizationScreen extends Screen {
         super.init();
         int i = (this.width - this.sizePx) / 2;
         int j = (this.height - this.sizePx) / 2;
-        this.addRenderableWidget(refreshURLBtn = new Button(i + 128, j + 75, 100, 20, Component.translatable("gui.locallooks.refresh"), (p_214132_1_) -> {
+        this.addRenderableWidget(refreshURLBtn = Button.builder(Component.translatable("gui.locallooks.refresh"), (button) -> {
             this.enteredURL = this.skinURLField.getValue();
             loadingWarning = SkinLoader.testURL(enteredURL);
             this.changePlayerTexture(false, true, false,  false);
-        }));
+        }).size(100, 20).pos(i + 128, j + 75).build());
+
         refreshURLBtn.active = false;
         this.skinURLField = new EditBox(this.font, i + 130, j + 50, 180, 20, Component.translatable("selectWorld.enterName")) {
             protected MutableComponent createNarrationMessage() {
@@ -113,20 +112,24 @@ public class LookCustomizationScreen extends Screen {
             this.refreshURLBtn.active = !this.skinURLField.getValue().isEmpty();
         });
         this.addRenderableWidget(this.skinURLField);
-        this.addRenderableWidget(new Button(i + 150, j + 160, 140, 20, Component.translatable("gui.locallooks.toggle_arms"), (p_214132_1_) -> {
+
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.locallooks.toggle_arms"), (button) -> {
             smallArms = !smallArms;
             this.changePlayerTexture(false, false, true, false);
-        }));
-        this.addRenderableWidget(new Button(i + 150, j + 190, 140, 20, Component.translatable("gui.locallooks.reset"), (p_214132_1_) -> {
+        }).size(140, 20).pos(i + 150, j + 160).build());
+
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.locallooks.reset"), (button) -> {
             this.changePlayerTexture(true, true, false,  false);
-        }));
-        this.addRenderableWidget(new Button(i + 150, j + 220, 140, 20, Component.translatable("gui.done"), (p_214132_1_) -> {
+        }).size(140, 20).pos(i + 150, j + 190).build());
+
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.done"), (button) -> {
             onClose();
             Minecraft.getInstance().setScreen(null);
-        }));
-        this.addRenderableWidget(selectFileBtn = new Button(i + 128, j + 100, 100, 20, Component.translatable("gui.locallooks.select_file"), (p_214132_1_) -> {
+        }).size(140, 20).pos(i + 150, j + 220).build());
+
+        this.addRenderableWidget(selectFileBtn = Button.builder(Component.translatable("gui.locallooks.select_file"), (button) -> {
             Minecraft.getInstance().setScreen(new LocalSkinSelectionScreen(offhand));
-        }));
+        }).size(100, 20).pos(i + 128, j + 100).build());
     }
 
     public void resize(Minecraft minecraft, int width, int height) {

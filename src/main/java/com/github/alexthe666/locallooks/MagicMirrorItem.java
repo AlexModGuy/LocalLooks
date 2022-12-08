@@ -15,7 +15,7 @@ import net.minecraft.world.item.context.UseOnContext;
 public class MagicMirrorItem extends Item {
 
     public MagicMirrorItem() {
-        super(new Item.Properties().rarity(Rarity.UNCOMMON).stacksTo(1).tab(CreativeModeTab.TAB_MISC));
+        super(new Item.Properties().rarity(Rarity.UNCOMMON).stacksTo(1));
     }
 
     public InteractionResult useOn(UseOnContext context) {

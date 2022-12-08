@@ -27,19 +27,20 @@ public class LocalSkinSelectionScreen extends Screen {
     }
 
     protected void init() {
-        this.addRenderableWidget(new Button(this.width / 2 - 200, this.height - 48, 120, 20, CommonComponents.GUI_CANCEL, (p_238903_1_) -> {
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_CANCEL, (button) -> {
             this.minecraft.setScreen(new LookCustomizationScreen(offhand));
-        }));
-        this.addRenderableWidget(new Button(this.width / 2 - 60, this.height - 48, 120, 20, Component.translatable("gui.locallooks.open_folder"), (p_238896_1_) -> {
+        }).size(120, 20).pos(this.width / 2 - 200, this.height - 48).build());
+        this.addRenderableWidget(Button.builder(Component.translatable("gui.locallooks.open_folder"), (button) -> {
             File path = SkinLoader.getSkinFolder();
             if (path != null) {
                 Util.getPlatform().openFile(path);
             }
             this.list.repopulate();
-        }));
-        this.addRenderableWidget(selectSkinBtn = new Button(this.width / 2 + 80, this.height - 48, 120, 20, Component.translatable("gui.locallooks.select"), (p_238903_1_) -> {
+        }).size(120, 20).pos(this.width / 2 - 60, this.height - 48).build());
+        this.addRenderableWidget(selectSkinBtn = Button.builder(Component.translatable("gui.locallooks.select"), (button) -> {
             this.minecraft.setScreen(new LookCustomizationScreen(offhand, this.list.getSelected().getFile()));
-        }));
+        }).size(120, 20).pos(this.width / 2 + 80, this.height - 48).build());
+
         this.selectSkinBtn.active = false;
         this.list = new SkinListWidget(minecraft, this.width, this.height, TITLE_TEXT);
         this.addWidget(this.list);

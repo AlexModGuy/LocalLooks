@@ -20,9 +20,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractClientPlayer.class)
 public abstract class AbstractClientPlayerEntityMixin extends Player {
 
-
-    public AbstractClientPlayerEntityMixin(Level level, BlockPos pos, float f, GameProfile gameProfile, @Nullable ProfilePublicKey key) {
-        super(level, pos, f, gameProfile, key);
+    public AbstractClientPlayerEntityMixin(Level p_250508_, BlockPos p_250289_, float p_251702_, GameProfile p_252153_) {
+        super(p_250508_, p_250289_, p_251702_, p_252153_);
     }
 
     @Inject(at = @At("HEAD"),

@@ -37,7 +37,7 @@ public class SkinLoader {
         Path jsonPath = Paths.get(configPath.toAbsolutePath().toString(), "locallooks/skins");
         if (!Files.exists(jsonPath)) {
             try {
-                Files.createDirectory(jsonPath);
+                Files.createDirectories(jsonPath);
                 LocalLooks.LOGGER.info("Created skin folder for locallooks");
             }catch (Exception e){
                 return null;

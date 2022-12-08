@@ -3,10 +3,13 @@ package com.github.alexthe666.locallooks;
 import com.github.alexthe666.locallooks.config.ConfigHolder;
 import com.github.alexthe666.locallooks.message.CloseMirrorMessage;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.CreativeModeTabEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -37,7 +40,7 @@ public class LocalLooks {
     private static final String PROTOCOL_VERSION = Integer.toString(1);
     private static int packetsRegistered;
     public static final SimpleChannel NETWORK_WRAPPER;
-    public static final RegistryObject<SoundEvent> MIRROR_SOUND = SOUND_REGISTRY.register("magic_mirror", () -> new SoundEvent(new ResourceLocation("locallooks:magic_mirror")));
+    public static final RegistryObject<SoundEvent> MIRROR_SOUND = SOUND_REGISTRY.register("magic_mirror", () -> SoundEvent.createVariableRangeEvent(new ResourceLocation("locallooks:magic_mirror")));
 
     static {
         NetworkRegistry.ChannelBuilder channel = NetworkRegistry.ChannelBuilder.named(new ResourceLocation("locallooks", "main_channel"));
@@ -55,6 +58,7 @@ public class LocalLooks {
         PROXY.init();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::registerTabItems);
         ModLoadingContext modLoadingContext = ModLoadingContext.get();
         modLoadingContext.registerConfig(ModConfig.Type.COMMON, ConfigHolder.SERVER_SPEC);
         modLoadingContext.registerConfig(ModConfig.Type.CLIENT, ConfigHolder.CLIENT_SPEC);
@@ -85,4 +89,8 @@ public class LocalLooks {
         NETWORK_WRAPPER.registerMessage(packetsRegistered++, CloseMirrorMessage.class, CloseMirrorMessage::write, CloseMirrorMessage::read, CloseMirrorMessage.Handler::handle);
     }
 
+
+    private void registerTabItems(final CreativeModeTabEvent.BuildContents event) {
+        event.registerSimple(CreativeModeTabs.TOOLS_AND_UTILITIES, MAGIC_MIRROR.get());
+    }
 }
