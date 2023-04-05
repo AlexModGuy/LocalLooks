@@ -91,6 +91,9 @@ public class LocalLooks {
 
 
     private void registerTabItems(final CreativeModeTabEvent.BuildContents event) {
-        event.registerSimple(CreativeModeTabs.TOOLS_AND_UTILITIES, MAGIC_MIRROR.get());
+        if(event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES){
+            event.accept(MAGIC_MIRROR.get());
+
+        }
     }
 }

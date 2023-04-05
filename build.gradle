@@ -21,12 +21,7 @@ archivesBaseName = "${modid}"
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    // The mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   Snapshot are built nightly.
-    // stable_#            Stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: '1.19.3'
+    mappings channel: 'official', version: '1.19.4'
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
@@ -116,10 +111,10 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.3-44.0.1'
+    minecraft 'net.minecraftforge:forge:1.19.4-45.0.41'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    compileOnly fg.deobf("curse.maven:citadel-331936:4147495")
-    runtimeOnly fg.deobf("curse.maven:citadel-331936:4147495")
+    compileOnly fg.deobf("curse.maven:citadel-331936:4473245")
+    runtimeOnly fg.deobf("curse.maven:citadel-331936:4473245")
 }
 
 sourceSets {

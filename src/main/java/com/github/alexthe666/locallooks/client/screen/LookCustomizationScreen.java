@@ -15,6 +15,7 @@ import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +24,7 @@ import net.minecraft.util.Mth;
 import org.joml.Matrix4f;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Component;
+import org.joml.Quaternionf;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -198,6 +200,14 @@ public class LookCustomizationScreen extends Screen {
     public void render(PoseStack matrixStack, int x, int y, float partialTicks) {
         this.renderBackground(matrixStack);
         super.render(matrixStack, x, y, partialTicks);
+
+        float f = (float)Math.atan((double)(-x / 40.0F));
+        float f1 = (float)Math.atan((double)(-y / 40.0F));
+        Quaternionf quaternionf = (new Quaternionf()).rotateZ(-(float)Math.PI);
+        Quaternionf quaternionf1 = (new Quaternionf()).rotateX(f1 * 20.0F * ((float)Math.PI / 180F));
+        quaternionf.mul(quaternionf1);
+
+
         this.mousePosX = (float) x;
         this.mousePosY = (float) y;
         int k = (this.width - this.sizePx - 200) / 2;
@@ -211,7 +221,26 @@ public class LookCustomizationScreen extends Screen {
         RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         blit(matrixStack, k, l, 0.0F, 0.0F, this.sizePx, this.sizePx, this.sizePx, this.sizePx);
-        InventoryScreen.renderEntityInInventory(k + 125, l + 195, 70, (float) (k + 125) - this.mousePosX, (float) (l + 195 - 50) - this.mousePosY, Minecraft.getInstance().player);
+
+        Player entity = Minecraft.getInstance().player;
+        float f2 = entity.yBodyRot;
+        float f3 = entity.getYRot();
+        float f4 = entity.getXRot();
+        float f5 = entity.yHeadRotO;
+        float f6 = entity.yHeadRot;
+        entity.yBodyRot = 180.0F + f * 20.0F;
+        entity.setYRot(180.0F + f * 40.0F);
+        entity.setXRot(-f1 * 20.0F);
+        entity.yHeadRot = entity.getYRot();
+        entity.yHeadRotO = entity.getYRot();
+
+        InventoryScreen.renderEntityInInventory(matrixStack, k + 125, l + 195, 70, quaternionf, quaternionf1, entity);
+        entity.yBodyRot = f2;
+        entity.setYRot(f3);
+        entity.setXRot(f4);
+        entity.yHeadRotO = f5;
+        entity.yHeadRot = f6;
+
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.setShaderTexture(0, TEXTURE_SHEEN);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -225,7 +254,7 @@ public class LookCustomizationScreen extends Screen {
     private void sheenBlit(Matrix4f matrix, int x1, int y1, int w, int h, float minU, float maxU, float minV, float maxV, float partialTick) {
         BufferBuilder bufferbuilder = Tesselator.getInstance().getBuilder();
         bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-        float offsetB = getBlitOffset() + 1000.0F;
+        float offsetB =  1000.0F;
         float startAlpha = 0.3F + Mth.sin((Minecraft.getInstance().player.tickCount + partialTick) * 0.01F) * 0.1F;
         float progress = 0.2F * Mth.lerp(partialTick, prevTransProgress, transProgress);
         float alpha = startAlpha + progress * (1F - startAlpha);
