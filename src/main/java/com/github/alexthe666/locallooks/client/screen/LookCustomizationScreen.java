@@ -10,6 +10,7 @@ import com.github.alexthe666.locallooks.skin.SkinLoader;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.gui.components.EditBox;
@@ -197,9 +198,9 @@ public class LookCustomizationScreen extends Screen {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int x, int y, float partialTicks) {
-        this.renderBackground(matrixStack);
-        super.render(matrixStack, x, y, partialTicks);
+    public void render(GuiGraphics guiGraphics, int x, int y, float partialTicks) {
+        this.renderBackground(guiGraphics);
+        super.render(guiGraphics, x, y, partialTicks);
 
         float f = (float)Math.atan((double)(-x / 40.0F));
         float f1 = (float)Math.atan((double)(-y / 40.0F));
@@ -212,15 +213,12 @@ public class LookCustomizationScreen extends Screen {
         this.mousePosY = (float) y;
         int k = (this.width - this.sizePx - 200) / 2;
         int l = (this.height - this.sizePx + 10) / 2;
-        drawString(matrixStack, this.font, TITLE_TEXT, k + 95, l + 4, 10526880);
-        drawString(matrixStack, this.font, ENTER_URL_TEXT, k + 230, l + 30, 10526880);
+        guiGraphics.drawString(this.font, TITLE_TEXT, k + 95, l + 4, 10526880);
+        guiGraphics.drawString(this.font, ENTER_URL_TEXT, k + 230, l + 30, 10526880);
         if (loadingWarning > 0) {
-            drawString(matrixStack, this.font, Component.translatable("gui.locallooks.url_warning_" + loadingWarning), k + 320, l + 77, 0XFF0000);
+            guiGraphics.drawString(this.font, Component.translatable("gui.locallooks.url_warning_" + loadingWarning), k + 320, l + 77, 0XFF0000);
         }
-        RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        blit(matrixStack, k, l, 0.0F, 0.0F, this.sizePx, this.sizePx, this.sizePx, this.sizePx);
+        guiGraphics.blit(TEXTURE, k, l, 0.0F, 0.0F, this.sizePx, this.sizePx, this.sizePx, this.sizePx);
 
         Player entity = Minecraft.getInstance().player;
         float f2 = entity.yBodyRot;
@@ -234,7 +232,7 @@ public class LookCustomizationScreen extends Screen {
         entity.yHeadRot = entity.getYRot();
         entity.yHeadRotO = entity.getYRot();
 
-        InventoryScreen.renderEntityInInventory(matrixStack, k + 125, l + 195, 70, quaternionf, quaternionf1, entity);
+        InventoryScreen.renderEntityInInventory(guiGraphics, k + 125, l + 195, 70, quaternionf, quaternionf1, entity);
         entity.yBodyRot = f2;
         entity.setYRot(f3);
         entity.setXRot(f4);
@@ -244,10 +242,10 @@ public class LookCustomizationScreen extends Screen {
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         RenderSystem.setShaderTexture(0, TEXTURE_SHEEN);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        sheenBlit(matrixStack.last().pose(), k, l, this.sizePx, this.sizePx, 0.0F, 1.0F, 0.0F, 1.0F, partialTicks);
-        matrixStack.pushPose();
-        this.skinURLField.render(matrixStack, x, y, partialTicks);
-        matrixStack.popPose();
+        sheenBlit(guiGraphics.pose().last().pose(), k, l, this.sizePx, this.sizePx, 0.0F, 1.0F, 0.0F, 1.0F, partialTicks);
+        guiGraphics.pose().pushPose();
+        this.skinURLField.render(guiGraphics, x, y, partialTicks);
+        guiGraphics.pose().popPose();
     }
 
 

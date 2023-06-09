@@ -3,14 +3,12 @@ package com.github.alexthe666.locallooks;
 import com.github.alexthe666.locallooks.config.ConfigHolder;
 import com.github.alexthe666.locallooks.message.CloseMirrorMessage;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.CreativeModeTabEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -90,10 +88,9 @@ public class LocalLooks {
     }
 
 
-    private void registerTabItems(final CreativeModeTabEvent.BuildContents event) {
-        if(event.getTab() == CreativeModeTabs.TOOLS_AND_UTILITIES){
-            event.accept(MAGIC_MIRROR.get());
-
+    public void registerTabItems(final BuildCreativeModeTabContentsEvent event) {
+        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
+            event.accept(MAGIC_MIRROR);
         }
     }
 }

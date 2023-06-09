@@ -39,7 +39,7 @@ public class CloseMirrorMessage  {
         public static void handle(CloseMirrorMessage message, Supplier<NetworkEvent.Context> context) {
             ((NetworkEvent.Context)context.get()).setPacketHandled(true);
             ((NetworkEvent.Context)context.get()).enqueueWork(() -> {
-                Entity e = ((NetworkEvent.Context)context.get()).getSender().level.getEntity(message.entityID);
+                Entity e = ((NetworkEvent.Context)context.get()).getSender().level().getEntity(message.entityID);
                 if(e instanceof Player){
                     ItemStack stack = message.offhand ? ((Player) e).getOffhandItem() : ((Player) e).getMainHandItem();
                     if(stack.getItem() == LocalLooks.MAGIC_MIRROR.get()){

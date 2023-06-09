@@ -3,6 +3,7 @@ package com.github.alexthe666.locallooks.client.screen;
 import com.github.alexthe666.locallooks.skin.SkinLoader;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.client.gui.screens.Screen;
@@ -62,14 +63,14 @@ public class LocalSkinSelectionScreen extends Screen {
     }
 
 
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        this.renderGlassBackground(0);
-        this.list.render(matrixStack, mouseX, mouseY, partialTicks);
-        drawCenteredString(matrixStack, this.font, this.title, this.width / 2, 8, 16777215);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderGlassBackground(guiGraphics, 0);
+        this.list.render(guiGraphics, mouseX, mouseY, partialTicks);
+        guiGraphics.drawCenteredString(this.font, this.title, this.width / 2, 8, 16777215);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
-    public void renderGlassBackground(int vOffset) {
+    public void renderGlassBackground(GuiGraphics guiGraphics, int vOffset) {
         Tesselator tesselator = Tesselator.getInstance();
         BufferBuilder bufferbuilder = tesselator.getBuilder();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
@@ -82,6 +83,6 @@ public class LocalSkinSelectionScreen extends Screen {
         bufferbuilder.vertex((double)this.width, 0.0D, 0.0D).uv((float)this.width / 32.0F, (float)vOffset).color(64, 64, 64, 255).endVertex();
         bufferbuilder.vertex(0.0D, 0.0D, 0.0D).uv(0.0F, (float)vOffset).color(64, 64, 64, 255).endVertex();
         tesselator.end();
-        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new ScreenEvent.BackgroundRendered(this, new PoseStack()));
+        net.minecraftforge.common.MinecraftForge.EVENT_BUS.post(new ScreenEvent.BackgroundRendered(this, guiGraphics));
     }
 }

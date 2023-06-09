@@ -6,10 +6,10 @@ import com.github.alexthe666.locallooks.skin.SkinLoader;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ObjectSelectionList;
 import com.mojang.blaze3d.vertex.Tesselator;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.AbstractTexture;
@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Locale;
 
 import net.minecraft.network.chat.Component;
 
@@ -69,11 +68,11 @@ public class SkinListWidget extends ObjectSelectionList<SkinListWidget.Entry> {
     }
 
     @Override
-    public void render(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        ResourceLocation prev = GuiComponent.BACKGROUND_LOCATION;
-        GuiComponent.BACKGROUND_LOCATION = LocalSkinSelectionScreen.BACKGROUND_LOCATION;
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-        GuiComponent.BACKGROUND_LOCATION = prev;
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        ResourceLocation prev = Screen.BACKGROUND_LOCATION;
+        Screen.BACKGROUND_LOCATION = LocalSkinSelectionScreen.BACKGROUND_LOCATION;
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
+        Screen.BACKGROUND_LOCATION = prev;
     }
 
     public final class Entry extends ObjectSelectionList.Entry<Entry>{
@@ -92,22 +91,19 @@ public class SkinListWidget extends ObjectSelectionList<SkinListWidget.Entry> {
         }
 
         @Override
-        public void render(PoseStack matrixStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
-            matrixStack.pushPose();
-            RenderSystem.setShader(GameRenderer::getPositionTexShader);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-            RenderSystem.setShaderTexture(0, resourceLocation);
+        public void render(GuiGraphics guiGraphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTicks) {
+            guiGraphics.pose().pushPose();
             RenderSystem.enableBlend();
             RenderSystem.enableBlend();
-            GuiComponent.blit(matrixStack, left, top, 0.0F, 0.0F, 64, 64, 64, 64);
+            guiGraphics.blit(resourceLocation, left, top, 0.0F, 0.0F, 64, 64, 64, 64);
             RenderSystem.disableBlend();
-            matrixStack.popPose();
-            matrixStack.pushPose();
-            Minecraft.getInstance().font.draw(matrixStack, fileName, (float)(left + 64), (float)(top + 6), selectable ? 16777215 : 0XFF0000);
+            guiGraphics.pose().popPose();
+            guiGraphics.pose().pushPose();
+            guiGraphics.drawString(Minecraft.getInstance().font, fileName, (float)(left + 64), (float)(top + 6), selectable ? 16777215 : 0XFF0000, false);
             if(!selectable){
-                Minecraft.getInstance().font.draw(matrixStack, Component.translatable("gui.locallooks.url_warning_4"), (float)(left + 64), (float)(top + 26), 0XAA0000);
+                guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("gui.locallooks.url_warning_4"), (left + 64), (top + 26), 0XAA0000, true);
             }
-            matrixStack.popPose();
+            guiGraphics.pose().popPose();
         }
 
         @Override
